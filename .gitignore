@@ -7,3 +7,4 @@ site/
 .env.*
 __pycache__/
 .venv/
+public/visuals/

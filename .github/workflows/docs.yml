@@ -22,16 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install docs dependencies
-        run: python -m pip install -r requirements-docs.txt
-
-      - name: Build docs
-        run: mkdocs build --strict
+      - name: Assemble site
+        run: |
+          mkdir -p site/visuals
+          cp public/index.html site/index.html
+          cp story/*.html site/visuals/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
