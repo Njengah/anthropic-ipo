@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story 01 — Revenue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,450;6..72,550&family=Outfit:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ee;
+    --ink: #1c1915;
+    --muted: #5e574e;
+    --faint: #8a8176;
+    --line: #e4ddd3;
+    --coral: #d4532e;
+    --sage: #2f7a45;
+    --loss: #9a4030;
+    --bar: #d2c9bc;
+    --bar-hot: #d4532e;
+    --slate: #3e6674;
+    --gold: #c4842a;
+    --bartz: #6e2a22;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+  body {
+    font-family: Outfit, "Segoe UI", sans-serif;
+    height: 100%;
+  }
+  .frame {
+    width: min(1440px, 100%);
+    height: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 36px 56px 28px;
+    gap: 8px;
+  }
+  header { display: flex; justify-content: space-between; align-items: baseline; }
+  .mark {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.03em;
+  }
+  .mark span { color: var(--coral); }
+  .kicker {
+    margin: 0;
+    color: var(--faint);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(340px, 460px) 1fr;
+    gap: 36px;
+    align-items: center;
+    min-height: 0;
+  }
+  .readout { padding-bottom: 28px; }
+  .hero {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 550;
+    font-size: clamp(56px, 5.6vw, 84px);
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero em {
+    font-style: normal;
+    font-size: 0.34em;
+    letter-spacing: -0.03em;
+    color: var(--muted);
+    display: inline-block;
+    margin-left: 8px;
+  }
+  .when {
+    margin: 18px 0 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .facts { margin: 14px 0 0; padding: 0; list-style: none; }
+  .facts li {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 2px 0;
+  }
+  .pies {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+    align-items: start;
+  }
+  .pie { margin: 0; }
+  .ring {
+    width: min(148px, 100%);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    position: relative;
+  }
+  .ring svg { width: 100%; height: 100%; display: block; }
+  .mid {
+    position: absolute;
+    inset: 22%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+  }
+  .mid b {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 550;
+    font-size: 26px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .mid span {
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .pie figcaption {
+    margin: 10px 0 0;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .swatch { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .facts li strong { color: var(--ink); font-weight: 500; }
+  .op { font-weight: 500; }
+  .op.profit { color: var(--sage); }
+  .op.loss { color: var(--loss); }
+  .chart {
+    position: relative;
+    height: min(52vh, 460px);
+    margin-bottom: 32px;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  svg.layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .cols {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: end;
+    gap: 18px;
+  }
+  .col { height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; }
+  .bar {
+    width: min(64px, 70%);
+    background: var(--bar);
+    border-radius: 8px 8px 3px 3px;
+    height: 0;
+    transform-origin: center bottom;
+    transition: height 0.7s cubic-bezier(.2,.8,.2,1), background 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+  }
+  .col.on .bar {
+    background: var(--bar-hot);
+    transform: scaleX(1.08);
+    box-shadow: 0 16px 30px rgba(212, 83, 46, 0.22);
+  }
+  .col.dim .bar { opacity: 0.45; }
+  .lab {
+    position: absolute;
+    bottom: -28px;
+    font-size: 13px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+  }
+  .col.on .lab { color: var(--ink); font-weight: 500; }
+  .guide { stroke: var(--coral); stroke-width: 1.25; opacity: 0; transition: opacity 0.2s; }
+  .guide.show { opacity: 0.9; }
+  .curve { fill: none; stroke: #1c1915; stroke-width: 2.5; opacity: 0.45; }
+  .dot {
+    fill: var(--coral);
+    stroke: #f7f4ee;
+    stroke-width: 3;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .dot.show { opacity: 1; }
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--faint);
+    font-size: 12px;
+    padding-top: 18px;
+  }
+  @media (max-width: 900px) {
+    .frame { padding: 24px 20px 18px; overflow: auto; }
+    html, body { overflow: auto; }
+    .stage { grid-template-columns: 1fr; gap: 12px; align-items: stretch; }
+    .hero { font-size: 64px; }
+    .chart { height: 46vh; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <p class="mark">ANT<span>.</span></p>
+    <p class="kicker">01 · Revenue</p>
+  </header>
+  <div class="stage">
+    <div class="readout">
+      <p class="hero" id="hero">0.0<em>billion</em></p>
+      <p class="when" id="when">Q2 2026</p>
+      <div class="pies">
+        <figure class="pie">
+          <div class="ring">
+            <svg id="costPie" viewBox="0 0 120 120" aria-hidden="true"></svg>
+            <div class="mid"><b id="costPct">—</b><span id="costName">compute</span></div>
+          </div>
+          <figcaption>Operating costs</figcaption>
+        </figure>
+        <figure class="pie">
+          <div class="ring">
+            <svg id="sharePie" viewBox="0 0 120 120" aria-hidden="true"></svg>
+            <div class="mid"><b id="sharePct">—</b><span>of six quarters</span></div>
+          </div>
+          <figcaption>Revenue share</figcaption>
+        </figure>
+      </div>
+      <ul class="legend" id="legend"></ul>
+      <ul class="facts" id="facts"></ul>
+    </div>
+    <div class="chart" id="chart">
+      <svg class="layer" id="layer"></svg>
+      <div class="cols" id="cols"></div>
+    </div>
+  </div>
+  <footer>
+    <span>Sweep the quarters. Bars are revenue. Pies are that quarter’s costs, and its share of the six.</span>
+    <span>Not an offer.</span>
+  </footer>
+</div>
+<script>
+const quarters = [
+  { q: "Q1 2025", short: "Q1 25", rev: 376, op: -935, ratio: "0.40x", compute: 944, people: 218, partners: 24, other: 125, bartz: 0, extra: "The base of the chart." },
+  { q: "Q2 2025", short: "Q2 25", rev: 787, op: -1200, ratio: "0.57x", compute: 1390, people: 320, partners: 96, other: 181, bartz: 0, extra: "A year before the profit quarter." },
+  { q: "Q3 2025", short: "Q3 25", rev: 1382, op: -3089, ratio: "0.68x", compute: 2047, people: 489, partners: 202, other: 233, bartz: 1500, extra: "Includes the $1.5 billion Bartz settlement." },
+  { q: "Q4 2025", short: "Q4 25", rev: 2040, op: -2836, ratio: "0.69x", compute: 2945, people: 812, partners: 246, other: 873, bartz: 0, extra: "Still spending more on compute than it made." },
+  { q: "Q1 2026", short: "Q1 26", rev: 4731, op: -1667, ratio: "1.40x", compute: 3387, people: 1295, partners: 1033, other: 683, bartz: 0, extra: "Revenue more than doubled in one quarter." },
+  { q: "Q2 2026", short: "Q2 26", rev: 11555, op: 974, ratio: "2.08x", compute: 5558, people: 1857, partners: 2135, other: 1031, bartz: 0, extra: "First GAAP operating profit. $974 million." }
+];
+const costColors = { compute: "#d4532e", people: "#1c1915", partners: "#3e6674", other: "#c4842a", bartz: "#6e2a22" };
+const costLabels = { compute: "Compute", people: "People", partners: "Partners", other: "Other", bartz: "Bartz" };
+const quiet = ["#e4ddd3", "#d9d0c4", "#cdc3b4", "#bfb3a2", "#b0a292"];
+const revTotal = quarters.reduce((sum, item) => sum + item.rev, 0);
+
+const chart = document.getElementById("chart");
+const cols = document.getElementById("cols");
+const layer = document.getElementById("layer");
+const hero = document.getElementById("hero");
+const when = document.getElementById("when");
+const facts = document.getElementById("facts");
+const costPie = document.getElementById("costPie");
+const sharePie = document.getElementById("sharePie");
+const costPct = document.getElementById("costPct");
+const costName = document.getElementById("costName");
+const sharePct = document.getElementById("sharePct");
+const legend = document.getElementById("legend");
+const max = quarters[quarters.length - 1].rev;
+let shown = 0;
+let active = -1;
+let playing = true;
+let playFrom = 0;
+
+quarters.forEach((item) => {
+  const col = document.createElement("div");
+  col.className = "col";
+  col.innerHTML = `<div class="bar"></div><div class="lab">${item.short}</div>`;
+  cols.appendChild(col);
+});
+
+function seq(i) {
+  if (i === 0) return "First quarter on this chart";
+  const pct = Math.round((quarters[i].rev / quarters[i - 1].rev - 1) * 100);
+  return `+${pct}% from the prior quarter`;
+}
+
+function yoy(i) {
+  if (i < 4) return "";
+  const pct = Math.round((quarters[i].rev / quarters[i - 4].rev - 1) * 100);
+  return `+${pct.toLocaleString("en-US")}% from a year earlier`;
+}
+
+function slicesOf(parts) {
+  const total = parts.reduce((sum, part) => sum + part.value, 0);
+  const r = 46;
+  const circ = 2 * Math.PI * r;
+  const gap = parts.length > 1 ? 3 : 0;
+  let cursor = 0;
+  return parts.map((part) => {
+    const len = Math.max(0, (part.value / total) * circ - gap);
+    const dash = `${len.toFixed(2)} ${(circ - len).toFixed(2)}`;
+    const turn = (cursor / total) * 360 - 90;
+    cursor += part.value;
+    return `<circle cx="60" cy="60" r="${r}" fill="none" stroke="${part.color}" stroke-width="16" stroke-dasharray="${dash}" transform="rotate(${turn.toFixed(2)} 60 60)"></circle>`;
+  }).join("");
+}
+
+function paintPies(i) {
+  const item = quarters[i];
+  const costs = [
+    { key: "compute", value: item.compute },
+    { key: "people", value: item.people },
+    { key: "partners", value: item.partners },
+    { key: "other", value: item.other },
+    { key: "bartz", value: item.bartz }
+  ].filter((part) => part.value > 0);
+  const costTotal = costs.reduce((sum, part) => sum + part.value, 0);
+  const lead = costs.slice().sort((a, b) => b.value - a.value)[0];
+  costPie.innerHTML = slicesOf(costs.map((part) => ({ value: part.value, color: costColors[part.key] })));
+  costPct.textContent = `${Math.round((lead.value / costTotal) * 100)}%`;
+  costName.textContent = costLabels[lead.key].toLowerCase();
+  sharePie.innerHTML = slicesOf(quarters.map((quarter, n) => ({
+    value: quarter.rev,
+    color: n === i ? "#d4532e" : quiet[n > i ? n - 1 : n]
+  })));
+  sharePct.textContent = `${Math.round((item.rev / revTotal) * 100)}%`;
+  legend.innerHTML = costs.map((part) => {
+    const pct = Math.round((part.value / costTotal) * 100);
+    return `<li><i class="swatch" style="background:${costColors[part.key]}"></i>${costLabels[part.key]} ${pct}%</li>`;
+  }).join("");
+}
+
+function paintFacts(i) {
+  const item = quarters[i];
+  const op = item.op >= 0
+    ? `<span class="op profit">Operating profit · $${item.op.toLocaleString("en-US")} million</span>`
+    : `<span class="op loss">Operating loss · $${Math.abs(item.op).toLocaleString("en-US")} million</span>`;
+  const year = yoy(i);
+  facts.innerHTML = [
+    `<li><strong>${seq(i)}</strong></li>`,
+    year ? `<li><strong>${year}</strong></li>` : "",
+    `<li>${op}</li>`,
+    `<li>Revenue per compute dollar · <strong>${item.ratio}</strong></li>`
+  ].join("");
+  when.textContent = item.q;
+  paintPies(i);
+}
+
+function setHero(value) {
+  const exact = value >= 1000 ? (value / 1000).toFixed(1) : (value / 1000).toFixed(1);
+  hero.innerHTML = `${exact}<em>billion</em>`;
+}
+
+function tween(to) {
+  const from = shown;
+  const start = performance.now();
+  const dur = 420;
+  function step(now) {
+    const t = Math.min(1, (now - start) / dur);
+    const e = 1 - Math.pow(1 - t, 3);
+    shown = from + (to - from) * e;
+    setHero(shown);
+    if (t < 1) requestAnimationFrame(step);
+    else shown = to;
+  }
+  requestAnimationFrame(step);
+}
+
+function select(i, animateNumber) {
+  if (i === active) return;
+  const first = active < 0;
+  active = i;
+  [...cols.children].forEach((col, n) => {
+    col.classList.toggle("on", n === i);
+    col.classList.toggle("dim", n !== i);
+  });
+  paintFacts(i);
+  if (animateNumber && !first) tween(quarters[i].rev);
+  else {
+    shown = quarters[i].rev;
+    setHero(shown);
+  }
+}
+
+function layout() {
+  const w = chart.clientWidth;
+  const h = chart.clientHeight;
+  layer.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  layer.innerHTML = `
+    <line class="guide" id="guide" x1="0" y1="0" x2="0" y2="${h}"></line>
+    <path class="curve" id="curve"></path>
+    <circle class="dot" id="dot" r="7"></circle>
+  `;
+  const colsEls = [...cols.children];
+  colsEls.forEach((col, n) => {
+    const bar = col.querySelector(".bar");
+    const px = Math.max(8, (quarters[n].rev / max) * (h - 8));
+    bar.style.height = px + "px";
+  });
+  drawCurve();
+}
+
+function points() {
+  const h = chart.clientHeight;
+  const colsEls = [...cols.children];
+  return colsEls.map((col, n) => {
+    const rect = col.getBoundingClientRect();
+    const host = chart.getBoundingClientRect();
+    const x = rect.left - host.left + rect.width / 2;
+    const y = h - Math.max(8, (quarters[n].rev / max) * (h - 8));
+    return { x, y };
+  });
+}
+
+function drawCurve() {
+  const pts = points();
+  const curve = document.getElementById("curve");
+  if (!curve || !pts.length) return;
+  curve.setAttribute("d", pts.map((p, n) => `${n ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" "));
+}
+
+function placeDot(t) {
+  const pts = points();
+  const guide = document.getElementById("guide");
+  const dot = document.getElementById("dot");
+  if (!pts.length || !guide || !dot) return;
+  const xMax = pts.length - 1;
+  const f = Math.max(0, Math.min(xMax, t));
+  const i = Math.floor(f);
+  const j = Math.min(xMax, i + 1);
+  const local = f - i;
+  const x = pts[i].x + (pts[j].x - pts[i].x) * local;
+  const y = pts[i].y + (pts[j].y - pts[i].y) * local;
+  guide.setAttribute("x1", x);
+  guide.setAttribute("x2", x);
+  guide.classList.add("show");
+  dot.setAttribute("cx", x);
+  dot.setAttribute("cy", y);
+  dot.classList.add("show");
+}
+
+function indexFromEvent(ev) {
+  const rect = chart.getBoundingClientRect();
+  const x = Math.max(0, Math.min(rect.width, ev.clientX - rect.left));
+  return (x / rect.width) * (quarters.length - 1);
+}
+
+chart.addEventListener("pointermove", (ev) => {
+  playing = false;
+  const t = indexFromEvent(ev);
+  placeDot(t);
+  select(Math.round(t), true);
+});
+chart.addEventListener("pointerleave", () => {
+  if (active >= 0) placeDot(active);
+});
+
+function intro(now) {
+  if (!playFrom) playFrom = now;
+  if (!playing) return;
+  const t = Math.min(1, (now - playFrom) / 2600);
+  const eased = 1 - Math.pow(1 - t, 3);
+  const pos = eased * (quarters.length - 1);
+  placeDot(pos);
+  select(Math.round(pos), true);
+  if (t < 1) requestAnimationFrame(intro);
+}
+window.addEventListener("resize", () => { layout(); if (active >= 0) placeDot(active); });
+layout();
+select(0, false);
+requestAnimationFrame(intro);
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+site_name: Anthropic IPO
+site_description: A reading of Anthropic's preliminary S-1, filed October 26, 2026
+site_url: https://njengah.github.io/anthropic-ipo/
+repo_url: https://github.com/Njengah/anthropic-ipo
+repo_name: Njengah/anthropic-ipo
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - The filing:
+      - What was filed: filing/what-was-filed.md
+      - The offering: filing/the-offering.md
+      - Still blank: filing/still-blank.md
+  - Pictures:
+      - Revenue: pictures/revenue.md
+      - A dollar of revenue: pictures/dollar.md
+      - The loss: pictures/loss.md
+      - Promises: pictures/promises.md
+      - Customers: pictures/customers.md
+      - Builders: pictures/builders.md
+      - The share: pictures/control.md
+      - Competition: pictures/competition.md
+      - Other numbers: pictures/numbers.md
+      - Blanks: pictures/blanks.md
+  - Reference:
+      - Source: reference/source.md

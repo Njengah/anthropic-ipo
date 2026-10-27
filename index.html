@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ANT — eight pictures from the S-1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,550;1,6..72,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ee;
+    --panel: #ffffff;
+    --ink: #1c1915;
+    --muted: #5e574e;
+    --faint: #8a8176;
+    --line: #e4ddd3;
+    --coral: #d4532e;
+    --sand: #3d3832;
+    --gold: #a56b1c;
+    --sage: #2f7a45;
+    --slate: #3e6674;
+    --bar: #d8d0c4;
+    --track: #ece6dc;
+    --aside: #efeae2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: Outfit, "Segoe UI", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  .app { display: grid; grid-template-columns: 220px 1fr; min-height: 100%; }
+  aside {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 28px 22px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    background: var(--aside);
+  }
+  .mark {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 28px;
+    margin: 0;
+    letter-spacing: -0.03em;
+  }
+  .mark span { color: var(--coral); }
+  .eyebrow {
+    margin: 4px 0 28px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  nav { display: flex; flex-direction: column; gap: 4px; }
+  nav button {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13.5px;
+  }
+  nav button .n {
+    display: inline-block;
+    width: 22px;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  nav button.active { background: #fff; color: var(--ink); }
+  nav button.active .n { color: var(--coral); }
+  .legal {
+    margin-top: auto;
+    color: var(--faint);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  main { height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  section {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    padding: 48px 64px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .kicker {
+    color: var(--coral);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 550;
+    font-size: clamp(34px, 3.4vw, 52px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin: 0 0 12px;
+    max-width: 16ch;
+  }
+  .lede {
+    max-width: 640px;
+    color: var(--sand);
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 0 0 32px;
+  }
+  .source {
+    margin-top: 22px;
+    color: var(--faint);
+    font-size: 12px;
+  }
+  .bars { display: flex; align-items: flex-end; gap: 18px; height: 280px; max-width: 860px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+  .bar {
+    width: 100%;
+    max-width: 72px;
+    background: var(--bar);
+    border-radius: 6px 6px 2px 2px;
+    position: relative;
+  }
+  .bar.now { background: var(--coral); }
+  .bar .val {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--sand);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .bar-col .lab { margin-top: 10px; font-size: 12px; color: var(--muted); }
+  .profit-pill {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+    color: var(--sage);
+    font-size: 13px;
+  }
+  .profit-pill i {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--sage); display: inline-block;
+  }
+  .stack {
+    display: flex;
+    height: 56px;
+    max-width: 920px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .stack span { display: block; height: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px 28px; margin-top: 18px; max-width: 920px; }
+  .legend div { min-width: 140px; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; }
+  .legend strong { display: block; font-weight: 500; font-size: 14px; margin-top: 4px; }
+  .legend em { font-style: normal; color: var(--muted); font-size: 12px; }
+  .bridge { max-width: 760px; display: flex; flex-direction: column; gap: 12px; }
+  .row { display: grid; grid-template-columns: 220px 1fr 90px; gap: 12px; align-items: center; }
+  .row .track { height: 14px; background: transparent; }
+  .row .fill { height: 14px; border-radius: 3px; }
+  .row .amt { text-align: right; font-variant-numeric: tabular-nums; font-size: 14px; }
+  .neg { color: var(--coral); }
+  .pos { color: var(--sage); }
+  .partners { max-width: 880px; display: flex; flex-direction: column; gap: 11px; }
+  .p { display: grid; grid-template-columns: 168px 1fr 120px; gap: 12px; align-items: center; }
+  .p .name { font-size: 14px; }
+  .p .name small { display: block; color: var(--faint); font-size: 11px; }
+  .p .track { height: 16px; background: var(--track); border-radius: 3px; }
+  .p .fill { height: 16px; border-radius: 3px; }
+  .p .amt { font-size: 13px; color: var(--sand); font-variant-numeric: tabular-nums; }
+  .hatch {
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0,0,0,0.28) 4px, rgba(0,0,0,0.28) 6px);
+  }
+  .key { display: flex; gap: 18px; margin-bottom: 16px; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; }
+  .ladder { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; max-width: 920px; align-items: center; }
+  .bigs { display: flex; flex-direction: column; gap: 18px; }
+  .bigs article { border-top: 1px solid var(--line); padding-top: 12px; }
+  .bigs .num {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .bigs p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .revbar { height: 28px; display: flex; border-radius: 6px; overflow: hidden; margin-top: 8px; }
+  .matrix { width: 100%; max-width: 920px; border-collapse: collapse; }
+  .matrix th, .matrix td {
+    text-align: left;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    vertical-align: top;
+  }
+  .matrix th { color: var(--faint); font-weight: 500; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .matrix tr.you td { background: #fde8e0; }
+  .matrix td:first-child { font-weight: 500; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 980px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    min-height: 240px;
+  }
+  .card .num {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 48px;
+    letter-spacing: -0.03em;
+    margin: 8px 0;
+  }
+  .card h2 { font: 500 15px Outfit, sans-serif; margin: 0; }
+  .card .def { color: var(--sand); font-size: 14px; line-height: 1.45; margin: 14px 0 0; }
+  .blanks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 820px; }
+  .blank {
+    border: 1px dashed #c3b9ac;
+    border-radius: 14px;
+    min-height: 140px;
+    padding: 20px;
+    background: transparent;
+  }
+  .blank strong { display: block; font-weight: 500; margin-bottom: 8px; }
+  .blank p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+  .blank .empty {
+    font-family: Newsreader, Georgia, serif;
+    font-style: italic;
+    color: var(--faint);
+    font-size: 28px;
+  }
+  @media (max-width: 980px) {
+    .app { grid-template-columns: 1fr; }
+    aside { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+    main { height: auto; overflow: visible; }
+    section { padding: 36px 22px 48px; scroll-snap-align: none; }
+    .ladder, .cards, .blanks { grid-template-columns: 1fr; }
+    .row, .p { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <p class="mark">ANT<span>.</span></p>
+    <p class="eyebrow">Eight pictures</p>
+    <nav id="nav">
+      <button data-i="0"><span class="n">01</span>Revenue</button>
+      <button data-i="1"><span class="n">02</span>The dollar</button>
+      <button data-i="2"><span class="n">03</span>The loss</button>
+      <button data-i="3"><span class="n">04</span>Promises</button>
+      <button data-i="4"><span class="n">05</span>Customers</button>
+      <button data-i="5"><span class="n">06</span>Class A</button>
+      <button data-i="6"><span class="n">07</span>Definitions</button>
+      <button data-i="7"><span class="n">08</span>Still blank</button>
+    </nav>
+    <p class="legal">Preliminary S-1 filed Oct 26, 2026. Numbers can change. Not an offer and not advice.</p>
+  </aside>
+  <main id="main">
+    <section>
+      <p class="kicker">01 · Six quarters</p>
+      <h1>From $376 million to $11.6 billion.</h1>
+      <p class="lede">Quarterly revenue. The last bar is also the first quarter with a GAAP operating profit, $974 million.</p>
+      <div class="bars" id="rev"></div>
+      <p class="profit-pill"><i></i>Q2 2026 operating profit · revenue per compute dollar 0.40x → 2.08x</p>
+      <p class="source">Quarterly statements of operations, Q1 2025–Q2 2026. Dollars in the chart are billions.</p>
+    </section>
+
+    <section>
+      <p class="kicker">02 · Q2 2026</p>
+      <h1>Compute took 48 cents of each revenue dollar.</h1>
+      <p class="lede">There is no gross-margin line. Compute and infrastructure is an operating expense. A year earlier it was 251% of revenue.</p>
+      <div class="stack" aria-hidden="true">
+        <span style="width:48.1%;background:#e36b45"></span>
+        <span style="width:16.1%;background:#c8bba6"></span>
+        <span style="width:18.5%;background:#d4a054"></span>
+        <span style="width:8.9%;background:#8a8176"></span>
+        <span style="width:8.4%;background:#2f7a45"></span>
+      </div>
+      <div class="legend">
+        <div><span class="sw" style="background:#e36b45"></span><strong>$5.56B</strong><em>Compute and infrastructure</em></div>
+        <div><span class="sw" style="background:#c8bba6"></span><strong>$1.86B</strong><em>Personnel, including $1.3B stock pay</em></div>
+        <div><span class="sw" style="background:#d4a054"></span><strong>$2.14B</strong><em>Sales, marketing, partnerships</em></div>
+        <div><span class="sw" style="background:#8a8176"></span><strong>$1.03B</strong><em>Other operating</em></div>
+        <div><span class="sw" style="background:#2f7a45"></span><strong>$0.97B</strong><em>Operating profit</em></div>
+      </div>
+      <p class="source">Three months ended June 30, 2026. Shares of $11.56B revenue.</p>
+    </section>
+
+    <section>
+      <p class="kicker">03 · Same quarter</p>
+      <h1>Operating profit was $1 billion. The reported loss was $66 billion.</h1>
+      <p class="lede">Almost all of the gap is a fair-value mark on convertible notes and related instruments, after the private valuation rose. It is not cash spent on compute that quarter.</p>
+      <div class="bridge">
+        <div class="row"><span>Operating profit</span><div class="track"><div class="fill" style="width:1.6%;background:#2f7a45"></div></div><span class="amt pos">+1.0</span></div>
+        <div class="row"><span>Interest income</span><div class="track"><div class="fill" style="width:1.3%;background:#2f7a45"></div></div><span class="amt pos">+0.8</span></div>
+        <div class="row"><span>Fair-value mark</span><div class="track"><div class="fill" style="width:100%;background:#e36b45"></div></div><span class="amt neg">−59.6</span></div>
+        <div class="row"><span>Other</span><div class="track"><div class="fill" style="width:14.2%;background:#e36b45"></div></div><span class="amt neg">−8.4</span></div>
+        <div class="row"><span>GAAP net loss</span><div class="track"></div><span class="amt neg">−66.3</span></div>
+      </div>
+      <p class="source">Q2 2026 bridge, billions. 974 + 762 − 59,597 − 8,448 = −66,309 million. Adjusted operating profit that quarter was $2.2B, a 19% margin.</p>
+    </section>
+
+    <section>
+      <p class="kicker">04 · Compute contracts</p>
+      <h1>The promises are not one number.</h1>
+      <p class="lede">Named agreements in the filing. Firm, cancellable, and estimated are different things. The summary’s single “more than $___” total is still blank.</p>
+      <div class="key">
+        <span><span class="sw" style="background:#e36b45"></span>Firm</span>
+        <span><span class="sw" style="background:#d4a054"></span>Can cancel</span>
+        <span><span class="sw" style="background:#7f97a1"></span>Estimate or only if delivered</span>
+      </div>
+      <div class="partners" id="partners"></div>
+      <p class="source">MD&amp;A, contractual obligations. Billions. Adding the rows would mix take-or-pay, leases, a cancellable GPU deal, and a range.</p>
+    </section>
+
+    <section>
+      <p class="kicker">05 · Customers</p>
+      <h1>Tens of millions of accounts. A few thousand pay most of the revenue.</h1>
+      <div class="ladder">
+        <div class="bigs">
+          <article>
+            <div class="num">~40 million</div>
+            <p>Customers under $100k, trailing twelve months ended Sep 30, 2026.</p>
+          </article>
+          <article>
+            <div class="num">&gt;11,900</div>
+            <p>At $100k or more. In the first half of 2026 this group was 74% of revenue, $12.0B of $16.3B.</p>
+          </article>
+          <article>
+            <div class="num">&gt;1,900 · ~250</div>
+            <p>$1 million or more, and about 250 at $10 million or more. Counts as of Sep 30, 2026.</p>
+          </article>
+        </div>
+        <div>
+          <p class="lede" style="margin-bottom:10px">First-half 2026 revenue</p>
+          <div class="revbar">
+            <span style="width:74%;background:#e36b45"></span>
+            <span style="width:26%;background:#d8d0c4"></span>
+          </div>
+          <div class="legend">
+            <div><span class="sw" style="background:#e36b45"></span><strong>74%</strong><em>$100k+ customers</em></div>
+            <div><span class="sw" style="background:#d8d0c4"></span><strong>26%</strong><em>Everyone else</em></div>
+          </div>
+          <p class="lede" style="margin-top:28px">More than half the Fortune 500 sit in the $100k tier. Revenue from them averaged under 0.1% of their expenses.</p>
+        </div>
+      </div>
+      <p class="source">No single customer was more than 10% of revenue for the nine months ended Sep 30, 2026. The top five were about 25%.</p>
+    </section>
+
+    <section>
+      <p class="kicker">06 · What is for sale</p>
+      <h1>Class A gets the economics. It does not get the board.</h1>
+      <p class="lede">The public share is the highlighted row. Founders hold one Class F share with 50.1% of the general vote and no economics. A trust elects the board majority.</p>
+      <table class="matrix">
+        <thead>
+          <tr><th>Share</th><th>Cash rights</th><th>Vote</th><th>Board</th></tr>
+        </thead>
+        <tbody>
+          <tr class="you">
+            <td>Class A · the IPO</td>
+            <td>Yes</td>
+            <td>1 per share</td>
+            <td>Elects directors other than the trust’s</td>
+          </tr>
+          <tr>
+            <td>Class N · partners</td>
+            <td>Yes</td>
+            <td>None, except where the law requires</td>
+            <td>Converts to Class A if sold to an outsider</td>
+          </tr>
+          <tr>
+            <td>Class F · seven founders</td>
+            <td>None</td>
+            <td>50.1% of the general vote</td>
+            <td>That vote elects the non-trust directors</td>
+          </tr>
+          <tr>
+            <td>Class T · the trust</td>
+            <td>None</td>
+            <td>Not on ordinary matters</td>
+            <td>Elects a majority of the board</td>
+          </tr>
+          <tr>
+            <td>Class E · employees</td>
+            <td>None</td>
+            <td>A narrow set of matters</td>
+            <td>Not the general board</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="source">Prospectus summary and Description of Capital Stock. Controlled company under Nasdaq rules. 5% of fully diluted Class N was issued to the public-benefit fund, with a framework for more if the price rises.</p>
+    </section>
+
+    <section>
+      <p class="kicker">07 · Read this before quoting</p>
+      <h1>Three numbers that need the sentence under them.</h1>
+      <div class="cards">
+        <article class="card">
+          <h2>Net revenue retention</h2>
+          <div class="num">~900%</div>
+          <p class="def">As of Sep 30, 2026. Current quarter over the quarter a year earlier, for customers with at least $1 back then. Claude Pro and Max are left out.</p>
+        </article>
+        <article class="card">
+          <h2>Adjusted operating margin</h2>
+          <div class="num">19%</div>
+          <p class="def">Q2 2026. GAAP operating margin was 8%. The adjusted figure adds back stock-based pay, $1.3B in that quarter.</p>
+        </article>
+        <article class="card">
+          <h2>Code written by Claude</h2>
+          <div class="num">&gt;90%</div>
+          <p class="def">Of September 2026 contributions to Anthropic’s own codebase. The filing does not say what counts as a contribution.</p>
+        </article>
+      </div>
+      <p class="source">Also in the filing: about 5% to 7% of revenue for the nine months ended Sep 30, 2026 came from customers later judged to be breaking usage rules. Models released in that same six-month window were over 80% of Q3 revenue.</p>
+    </section>
+
+    <section>
+      <p class="kicker">08 · This draft</p>
+      <h1>Four blanks. The page updates when they fill in.</h1>
+      <p class="lede">A preliminary prospectus. The amendment is the reason to keep the file.</p>
+      <div class="blanks">
+        <div class="blank"><span class="empty">$ —</span><strong>IPO price</strong><p>The range on the cover is empty.</p></div>
+        <div class="blank"><span class="empty">— shares</span><strong>Shares offered</strong><p>Company shares and selling-stockholder shares are both unstated.</p></div>
+        <div class="blank"><span class="empty">$ —</span><strong>Q3 2026 revenue</strong><p>The summary leaves the dollar amount blank. The quarterly table stops at June 30.</p></div>
+        <div class="blank"><span class="empty">$ —</span><strong>Commitment rollup</strong><p>The “more than” total, and how much is due in the next 12 months, are blank.</p></div>
+      </div>
+      <p class="source">Anthropic, PBC Form S-1, filed with the SEC on October 26, 2026. Local preview.</p>
+    </section>
+  </main>
+</div>
+<script>
+const quarters = [
+  ["Q1 25", 0.376],
+  ["Q2 25", 0.787],
+  ["Q3 25", 1.382],
+  ["Q4 25", 2.040],
+  ["Q1 26", 4.731],
+  ["Q2 26", 11.555]
+];
+const max = 11.555;
+const rev = document.getElementById("rev");
+quarters.forEach((q, i) => {
+  const col = document.createElement("div");
+  col.className = "bar-col";
+  const h = Math.max(6, (q[1] / max) * 240);
+  col.innerHTML = `<div class="bar${i === 5 ? " now" : ""}" style="height:${h}px"><span class="val">${q[1].toFixed(1)}</span></div><div class="lab">${q[0]}</div>`;
+  rev.appendChild(col);
+});
+
+const deals = [
+  ["Broadcom", "Leases, rent ex-interest", 161.2, "161", "firm"],
+  ["Google", "Minimum through Jul 2033", 114.5, "115", "firm"],
+  ["Amazon", "Minimum through Apr 2036", 110, "110", "firm"],
+  ["Microsoft", "Minimum, Nov 2026–May 2033", 44.9, "45", "firm"],
+  ["SpaceXAI", "Up to · 90-day cancel after early 2027", 120.5, "up to 121", "cancel"],
+  ["Google TPUs", "Extra estimate, 2028–2031, not in the table", 150, "125–150", "est"],
+  ["Nscale", "Up to · fees as capacity is accepted", 44.6, "up to 45", "est"],
+  ["Lambda", "About · delivery conditions", 41.3, "~41", "est"],
+  ["AMD", "Only if the first tranche is fully bought", 20, ">20", "est"]
+];
+const scale = 161.2;
+const colors = { firm: "#d4532e", cancel: "#c4842a", est: "#3e6674" };
+const host = document.getElementById("partners");
+deals.forEach(d => {
+  const row = document.createElement("div");
+  row.className = "p";
+  const w = Math.max(4, (d[2] / scale) * 100);
+  row.innerHTML = `<div class="name">${d[0]}<small>${d[1]}</small></div><div class="track"><div class="fill${d[3] === "125–150" ? " hatch" : ""}" style="width:${w}%;background:${colors[d[4]]}"></div></div><div class="amt">${d[3]}</div>`;
+  host.appendChild(row);
+});
+
+const main = document.getElementById("main");
+const buttons = [...document.querySelectorAll("#nav button")];
+function sync() {
+  const i = Math.round(main.scrollTop / main.clientHeight);
+  buttons.forEach((b, n) => b.classList.toggle("active", n === i));
+}
+buttons.forEach(b => b.addEventListener("click", () => {
+  main.scrollTo({ top: Number(b.dataset.i) * main.clientHeight, behavior: "smooth" });
+}));
+main.addEventListener("scroll", sync, { passive: true });
+sync();
+</script>
+</body>
+</html>

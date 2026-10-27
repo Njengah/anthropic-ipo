@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story 02 — The dollar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,450;6..72,550&family=Outfit:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ee;
+    --ink: #1c1915;
+    --muted: #5e574e;
+    --faint: #8a8176;
+    --line: #e4ddd3;
+    --coral: #d4532e;
+    --sage: #2f7a45;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+  body { font-family: Outfit, "Segoe UI", sans-serif; height: 100%; }
+  .frame {
+    width: min(1440px, 100%);
+    height: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 36px 56px 28px;
+  }
+  header { display: flex; justify-content: space-between; align-items: baseline; }
+  .mark {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.03em;
+  }
+  .mark span { color: var(--coral); }
+  .kicker {
+    margin: 0;
+    color: var(--faint);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(280px, 420px) 1fr;
+    gap: 56px;
+    align-items: center;
+    min-height: 0;
+  }
+  .hero {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 550;
+    font-size: clamp(72px, 8vw, 120px);
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.25s ease;
+  }
+  .hero em {
+    font-style: normal;
+    font-size: 0.32em;
+    letter-spacing: -0.03em;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .when { margin: 16px 0 0; font-size: 20px; font-weight: 500; }
+  .facts { margin: 16px 0 0; padding: 0; list-style: none; }
+  .facts li { color: var(--muted); font-size: 15.5px; line-height: 1.5; padding: 2px 0; }
+  .facts li strong { color: var(--ink); font-weight: 500; }
+  .dollar { cursor: crosshair; touch-action: none; padding: 28px 0 8px; }
+  .track {
+    display: flex;
+    align-items: stretch;
+    height: 148px;
+    gap: 8px;
+  }
+  .slice {
+    position: relative;
+    height: 100%;
+    border-radius: 12px;
+    transform-origin: center center;
+    transition: flex-grow 0.45s cubic-bezier(.2,.8,.2,1), transform 0.25s ease, opacity 0.25s ease, height 0.25s ease;
+    min-width: 18px;
+  }
+  .slice.on {
+    height: 176px;
+    margin-top: -14px;
+    box-shadow: 0 18px 34px rgba(28, 25, 21, 0.12);
+    z-index: 1;
+  }
+  .slice.dim { opacity: 0.38; }
+  .names {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .names span {
+    font-size: 13px;
+    color: var(--faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+  }
+  .names span.on { color: var(--ink); font-weight: 500; }
+  .ruler {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+    color: var(--faint);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--faint);
+    font-size: 12px;
+  }
+  @media (max-width: 900px) {
+    html, body { overflow: auto; }
+    .frame { padding: 24px 20px; height: auto; min-height: 100%; }
+    .stage { grid-template-columns: 1fr; gap: 20px; }
+    .hero { font-size: 72px; }
+    .track { height: 96px; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <p class="mark">ANT<span>.</span></p>
+    <p class="kicker">02 · The dollar</p>
+  </header>
+  <div class="stage">
+    <div>
+      <p class="hero" id="hero" style="color:#d4532e">48<em>cents</em></p>
+      <p class="when" id="when">Compute and infrastructure</p>
+      <ul class="facts" id="facts"></ul>
+    </div>
+    <div class="dollar" id="dollar">
+      <div class="track" id="track"></div>
+      <div class="names" id="names"></div>
+      <div class="ruler"><span>0</span><span>25¢</span><span>50¢</span><span>75¢</span><span>one dollar</span></div>
+    </div>
+  </div>
+  <footer>
+    <span>Sweep the dollar. Q2 2026, three months ended June 30. Revenue $11.6 billion.</span>
+    <span>Not an offer.</span>
+  </footer>
+</div>
+<script>
+const slices = [
+  {
+    name: "Compute",
+    millions: 5558,
+    cents: 48,
+    color: "#d4532e",
+    amount: "$5.56 billion",
+    lines: [
+      "<strong>48%</strong> of Q2 revenue",
+      "In Q1 2025 this was <strong>251%</strong> of revenue",
+      "There is no gross-margin line. Compute is bought 12 to 18 months ahead."
+    ]
+  },
+  {
+    name: "Personnel",
+    millions: 1857,
+    cents: 16,
+    color: "#c4b49a",
+    amount: "$1.86 billion",
+    lines: [
+      "<strong>16%</strong> of Q2 revenue",
+      "<strong>$1.3 billion</strong> of it is stock pay",
+      "Headcount was about 5,300 by the end of September."
+    ]
+  },
+  {
+    name: "Partnerships",
+    millions: 2135,
+    cents: 18,
+    color: "#c4842a",
+    amount: "$2.14 billion",
+    lines: [
+      "<strong>18%</strong> of Q2 revenue",
+      "Mostly fees to <strong>AWS, Google Cloud, and Azure</strong>",
+      "Anthropic keeps the customer contract and pays the cloud."
+    ]
+  },
+  {
+    name: "Other",
+    millions: 1031,
+    cents: 9,
+    color: "#8d847a",
+    amount: "$1.03 billion",
+    lines: [
+      "<strong>9%</strong> of Q2 revenue",
+      "Data work, software, payment fees, professional services",
+      "The slice that is not compute, people, or partners."
+    ]
+  },
+  {
+    name: "Profit",
+    millions: 974,
+    cents: 8,
+    color: "#2f7a45",
+    amount: "$974 million",
+    lines: [
+      "<strong>8%</strong> of Q2 revenue",
+      "First GAAP operating profit",
+      "What was left after the other four slices."
+    ]
+  }
+];
+
+const track = document.getElementById("track");
+const names = document.getElementById("names");
+const dollar = document.getElementById("dollar");
+const hero = document.getElementById("hero");
+const when = document.getElementById("when");
+const facts = document.getElementById("facts");
+let active = -1;
+let playing = true;
+let playFrom = 0;
+
+slices.forEach((slice) => {
+  const el = document.createElement("div");
+  el.className = "slice";
+  el.style.flex = `${slice.millions} 1 0`;
+  el.style.background = slice.color;
+  track.appendChild(el);
+  const label = document.createElement("span");
+  label.textContent = slice.name;
+  label.style.flex = `${slice.millions} 1 0`;
+  names.appendChild(label);
+});
+
+function paint(i) {
+  const slice = slices[i];
+  hero.style.color = slice.color;
+  hero.innerHTML = `${slice.cents}<em>cents</em>`;
+  when.textContent = slice.name === "Profit" ? "Operating profit" : slice.name === "Partnerships" ? "Sales, marketing, partnerships" : slice.name === "Other" ? "Other operating" : "Compute and infrastructure";
+  facts.innerHTML = [`<li><strong>${slice.amount}</strong></li>`, ...slice.lines.map((line) => `<li>${line}</li>`)].join("");
+  [...track.children].forEach((el, n) => {
+    el.classList.toggle("on", n === i);
+    el.classList.toggle("dim", n !== i);
+  });
+  [...names.children].forEach((el, n) => el.classList.toggle("on", n === i));
+}
+
+function select(i) {
+  if (i === active) return;
+  active = i;
+  paint(i);
+}
+
+function indexFromEvent(ev) {
+  const bars = [...track.children];
+  const x = ev.clientX;
+  for (let i = 0; i < bars.length; i++) {
+    const r = bars[i].getBoundingClientRect();
+    if (x <= r.right + 4) return i;
+  }
+  return bars.length - 1;
+}
+
+dollar.addEventListener("pointermove", (ev) => {
+  playing = false;
+  select(indexFromEvent(ev));
+});
+
+function intro(now) {
+  if (!playing) return;
+  if (!playFrom) playFrom = now;
+  const t = Math.min(1, (now - playFrom) / 2800);
+  const eased = 1 - Math.pow(1 - t, 3);
+  select(Math.min(slices.length - 1, Math.floor(eased * slices.length)));
+  if (t < 1) requestAnimationFrame(intro);
+}
+
+select(0);
+requestAnimationFrame(intro);
+</script>
+</body>
+</html>

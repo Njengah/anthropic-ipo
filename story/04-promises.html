@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Story 04 — Promises</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,450;6..72,550&family=Outfit:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ee;
+    --ink: #1c1915;
+    --muted: #5e574e;
+    --faint: #8a8176;
+    --coral: #d4532e;
+    --gold: #c4842a;
+    --slate: #3e6674;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); overflow: hidden; }
+  body { font-family: Outfit, "Segoe UI", sans-serif; height: 100%; }
+  .frame {
+    width: min(1440px, 100%);
+    height: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 32px 56px 24px;
+  }
+  header, .legend { display: flex; justify-content: space-between; align-items: baseline; }
+  .mark {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.03em;
+  }
+  .mark span { color: var(--coral); }
+  .kicker, .legend {
+    margin: 0;
+    color: var(--faint);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .legend { gap: 16px; justify-content: flex-start; text-transform: none; letter-spacing: 0.02em; font-size: 13px; margin: 0 0 14px; }
+  .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; }
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(260px, 380px) 1fr;
+    gap: 48px;
+    align-items: center;
+    min-height: 0;
+  }
+  .hero {
+    font-family: Newsreader, Georgia, serif;
+    font-weight: 550;
+    font-size: clamp(64px, 7vw, 108px);
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.25s ease;
+  }
+  .hero em {
+    font-style: normal;
+    font-size: 0.32em;
+    letter-spacing: -0.03em;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .hero.range { font-size: clamp(48px, 5vw, 78px); }
+  .when { margin: 14px 0 0; font-size: 20px; font-weight: 500; }
+  .facts { margin: 14px 0 0; padding: 0; list-style: none; }
+  .facts li { color: var(--muted); font-size: 15.5px; line-height: 1.45; padding: 2px 0; }
+  .facts li strong { color: var(--ink); font-weight: 500; }
+  .list { cursor: crosshair; touch-action: none; display: flex; flex-direction: column; gap: 8px; }
+  .row {
+    display: grid;
+    grid-template-columns: 128px 1fr 92px;
+    gap: 12px;
+    align-items: center;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+  }
+  .row.on { opacity: 1; }
+  .who { font-size: 14px; font-weight: 500; }
+  .track { height: 18px; background: #ece6dc; border-radius: 4px; overflow: hidden; }
+  .fill {
+    height: 100%;
+    width: 0;
+    border-radius: 4px;
+    transition: width 0.7s cubic-bezier(.2,.8,.2,1);
+  }
+  .row.on .track { height: 26px; }
+  .amt {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .row.on .amt { color: var(--ink); font-weight: 500; }
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    color: var(--faint);
+    font-size: 12px;
+  }
+  @media (max-width: 900px) {
+    html, body { overflow: auto; }
+    .frame { height: auto; min-height: 100%; padding: 24px 18px; }
+    .stage, .row { grid-template-columns: 1fr; }
+    .hero { font-size: 64px; }
+    .amt { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <p class="mark">ANT<span>.</span></p>
+    <p class="kicker">04 · Promises</p>
+  </header>
+  <div class="stage">
+    <div>
+      <p class="legend">
+        <span><i class="sw" style="background:#d4532e"></i>Firm</span>
+        <span><i class="sw" style="background:#c4842a"></i>Can cancel</span>
+        <span><i class="sw" style="background:#3e6674"></i>Estimate</span>
+      </p>
+      <p class="hero" id="hero" style="color:#d4532e">161<em>billion</em></p>
+      <p class="when" id="when">Broadcom · Firm</p>
+      <ul class="facts" id="facts"></ul>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+  <footer>
+    <span>Sweep the rows. Do not add them. The filing’s own total is still blank.</span>
+    <span>Not an offer.</span>
+  </footer>
+</div>
+<script>
+const scale = 161.2;
+const rows = [
+  { name: "Broadcom", show: "161", range: false, amount: 161.2, kind: "Firm", color: "#d4532e", lines: ["Leases. Rent before interest.", "Non-cancelable.", "About <strong>$161 billion</strong>."] },
+  { name: "Google", show: "115", range: false, amount: 114.5, kind: "Firm", color: "#d4532e", lines: ["Minimum spend through July 2033.", "Take-or-pay.", "About <strong>$115 billion</strong>."] },
+  { name: "Amazon", show: "110", range: false, amount: 110, kind: "Firm", color: "#d4532e", lines: ["Minimum spend through April 2036.", "Take-or-pay.", "<strong>$110 billion</strong>."] },
+  { name: "Microsoft", show: "45", range: false, amount: 44.9, kind: "Firm", color: "#d4532e", lines: ["Minimum, November 2026 to May 2033.", "Take-or-pay.", "About <strong>$45 billion</strong>."] },
+  { name: "SpaceXAI", show: "121", range: false, amount: 120.5, kind: "Can cancel", color: "#c4842a", lines: ["Up to about <strong>$121 billion</strong>.", "Either side can cancel on 90 days’ notice after early 2027.", "Not the same kind of promise as the four above."] },
+  { name: "Google TPUs", show: "125–150", range: true, amount: 150, kind: "Estimate", color: "#3e6674", lines: ["Extra capacity for 2028 to 2031.", "<strong>Not in the obligations table.</strong>", "A range, not a fixed bill."] },
+  { name: "Nscale", show: "45", range: false, amount: 44.6, kind: "Estimate", color: "#3e6674", lines: ["Up to about <strong>$45 billion</strong>.", "Fees start only when the capacity is accepted.", "Into 2033."] },
+  { name: "Lambda", show: "41", range: false, amount: 41.3, kind: "Estimate", color: "#3e6674", lines: ["About <strong>$41 billion</strong>.", "Depends on delivery, and on a facility lease.", "Into 2034."] },
+  { name: "AMD", show: ">20", range: false, amount: 20, kind: "Estimate", color: "#3e6674", lines: ["More than <strong>$20 billion</strong> only if the first tranche is fully bought.", "No fixed dollar commitment.", "A second tranche is possible, and also unpriced."] }
+];
+
+const list = document.getElementById("list");
+const hero = document.getElementById("hero");
+const when = document.getElementById("when");
+const facts = document.getElementById("facts");
+let active = -1;
+let playing = true;
+let playFrom = 0;
+
+rows.forEach((row) => {
+  const el = document.createElement("div");
+  el.className = "row";
+  el.innerHTML = `<div class="who">${row.name}</div><div class="track"><div class="fill" style="background:${row.color}"></div></div><div class="amt">${row.show}</div>`;
+  list.appendChild(el);
+});
+
+function paint(i) {
+  const row = rows[i];
+  hero.style.color = row.color;
+  hero.classList.toggle("range", row.range);
+  hero.innerHTML = `${row.show}<em>${row.range ? "billion" : "billion"}</em>`;
+  when.textContent = `${row.name} · ${row.kind}`;
+  facts.innerHTML = row.lines.map((line) => `<li>${line}</li>`).join("");
+  [...list.children].forEach((el, n) => {
+    el.classList.toggle("on", n === i);
+    const fill = el.querySelector(".fill");
+    fill.style.width = `${Math.max(6, (rows[n].amount / scale) * 100)}%`;
+  });
+}
+
+function select(i) {
+  if (i === active) return;
+  active = i;
+  paint(i);
+}
+
+function indexFromEvent(ev) {
+  const items = [...list.children];
+  const y = ev.clientY;
+  for (let i = 0; i < items.length; i++) {
+    const r = items[i].getBoundingClientRect();
+    if (y <= r.bottom + 4) return i;
+  }
+  return items.length - 1;
+}
+
+list.addEventListener("pointermove", (ev) => {
+  playing = false;
+  select(indexFromEvent(ev));
+});
+
+function intro(now) {
+  if (!playing) return;
+  if (!playFrom) playFrom = now;
+  const t = Math.min(1, (now - playFrom) / 4200);
+  const eased = 1 - Math.pow(1 - t, 3);
+  select(Math.min(rows.length - 1, Math.floor(eased * rows.length)));
+  if (t < 1) requestAnimationFrame(intro);
+}
+
+requestAnimationFrame(() => {
+  [...list.children].forEach((el, n) => {
+    el.querySelector(".fill").style.width = `${Math.max(6, (rows[n].amount / scale) * 100)}%`;
+  });
+  select(0);
+  requestAnimationFrame(intro);
+});
+</script>
+</body>
+</html>
